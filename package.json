@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "@nequi/nequi-ci-utils": "^3.0.0",
-    "aws-sdk-client-mock": "^4.1.0",
     "jasmine": "4.5.0",
     "jasmine-reporters": "2.5.2",
     "nyc": "15.1.0"

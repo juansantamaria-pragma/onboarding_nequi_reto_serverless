@@ -6,12 +6,14 @@ const RESPONSE_MESSAGES = nequiApiUtils.RESPONSE_MESSAGES
 const env = nequiUtils.Environment
 const lambdaUtils = nequiUtils.Lambda8
 
-const DEFAULT_TABLE = 'nequi-parameters-qa'
-
 const service = async (event) => {
+  const traceID = event.traceID
   try {
-    const tableName = env.getEnv('PARAMETERS_TABLE') || DEFAULT_TABLE
-    const { key, region } = event
+    const tableName = env.getEnv('PARAMETERS_TABLE')
+    const { key, region } = event.RequestMessage.RequestBody.any.parametersRQ
+
+    lambdaUtils.log(`service consulta DynamoDB [trace:${traceID}]`,
+      { tableName, key, region }, true)
 
     const clientId = await resolveClient()
     const data = await nequiDynamo.getItem(tableName, { key, region }, clientId)
@@ -28,6 +30,7 @@ const service = async (event) => {
     if (!!error && !!error.output) {
       throw error
     }
+    lambdaUtils.log(`service error [trace:${traceID}]`, error, true)
     throw lambdaUtils.buildOutput(true, true,
       getOutput(event, RESPONSE_MESSAGES.TECHNICAL_ERROR.CODE,
         RESPONSE_MESSAGES.TECHNICAL_ERROR.DESCRIPTION),
