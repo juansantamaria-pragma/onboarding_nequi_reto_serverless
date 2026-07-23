@@ -1,0 +1,25 @@
+{
+  "name": "reto_serverless",
+  "version": "1.0.0",
+  "description": "OnboardingNequi",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=lcov --reporter=text jasmine --config=test/support/jasmine.json"
+  },
+  "author": "JuanMiguelSantamaríaMúnera <jumsanta@nequi.com>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@nequi/nequi-api-utils": "^1.0.2",
+    "@nequi/nequi-aws-dynamodb": "^3.1.1",
+    "@nequi/nequi-utils": "^8.0.0",
+    "dotenv": "^16.4.5",
+    "jsonschema": "1.4.1"
+  },
+  "devDependencies": {
+    "@nequi/nequi-ci-utils": "^3.0.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "jasmine": "4.5.0",
+    "jasmine-reporters": "2.5.2",
+    "nyc": "15.1.0"
+  }
+}

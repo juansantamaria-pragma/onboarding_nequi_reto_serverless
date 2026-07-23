@@ -1,0 +1,11 @@
+event.json
+Gruntfile.js
+dist
+*.iml
+keys
+test/
+reports/
+coverage/
+settings.json
+package-lock.json
+diagrams/

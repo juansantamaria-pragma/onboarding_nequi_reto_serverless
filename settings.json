@@ -1,0 +1,25 @@
+{
+  "variables": {
+    "get": [],
+    "set": {
+      "DEV": {},
+      "QA": {
+        "NEQUI_ADDITIONAL_LOGGER_ENABLE": "true",
+        "NEQUI_LOGGER_ENABLE": "true"
+      },
+      "PDN": {}
+    },
+    "deployDev": [],
+    "deploy": [
+      "NEQUI_ADDITIONAL_LOGGER_ENABLE",
+      "NEQUI_LOGGER_ENABLE"
+    ],
+    "publish": [],
+    "both": []
+  },
+  "config": {
+    "timeout": 15,
+    "memorySize": 128,
+    "desc": "OnboardingNequi"
+  }
+}

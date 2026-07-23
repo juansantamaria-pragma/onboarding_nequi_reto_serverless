@@ -1,0 +1,45 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "networkInterface",
+            "Effect": "Allow",
+            "Action": [
+              "ec2:CreateNetworkInterface",
+              "ec2:DescribeNetworkInterfaces",
+              "ec2:DeleteNetworkInterface"
+            ],
+            "Resource": "*"
+        },  
+        {
+            "Sid": "cloudwatchlogs",
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogStream",
+              "logs:CreateLogGroup",
+              "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-east-1:177333342796:log-group:/aws/lambda/reto_serverless-dev",
+                "arn:aws:logs:us-east-1:177333342796:log-group:/aws/lambda/reto_serverless-dev:*"
+            ]
+        },
+        {
+            "Sid": "eventbridge",
+            "Effect": "Allow",
+            "Action": [
+                "events:PutEvents"
+            ],
+            "Resource": "arn:aws:events:us-east-1:177333342796:event-bus/Bus-Dev"
+        },
+        {
+            "Sid": "kmsdefaultkey",
+            "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:kms:us-east-1:177333342796:key/50a957ab-ee22-4590-bcfd-241aa16ab49b"
+        }  
+    ]
+  }
