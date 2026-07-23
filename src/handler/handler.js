@@ -1,3 +1,4 @@
+const { randomUUID } = require('crypto')
 const lambdaUtils = require('@nequi/nequi-utils').Lambda8
 const nequiApiUtils = require('@nequi/nequi-api-utils')
 const responseUtils = nequiApiUtils.ResponseAPIUtils
@@ -7,7 +8,9 @@ const validateSchema = require('../config/schema/validateSchema')
 const processBusiness = require('../business/business')
 
 module.exports = async function defaultHandler (event, context) {
-  lambdaUtils.log('Entry event ', JSON.stringify(event))
+  const traceID = randomUUID()
+  event.traceID = traceID
+  lambdaUtils.log(`reto_serverless entrada [trace:${traceID}]`, event, true)
   try {
     await validateSchema(event)
     const response = await processBusiness(event)
@@ -16,6 +19,7 @@ module.exports = async function defaultHandler (event, context) {
         RESPONSE_MESSAGES.SUCCESS.DESCRIPTION, { parametersRS: response })
       ))
   } catch (error) {
+    lambdaUtils.log(`reto_serverless error [trace:${traceID}]`, error, true)
     return await lambdaUtils.finish(error)
   }
 }

@@ -5,14 +5,16 @@
       "DEV": {},
       "QA": {
         "NEQUI_ADDITIONAL_LOGGER_ENABLE": "true",
-        "NEQUI_LOGGER_ENABLE": "true"
+        "NEQUI_LOGGER_ENABLE": "true",
+        "PARAMETERS_TABLE": "nequi-parameters-qa"
       },
       "PDN": {}
     },
     "deployDev": [],
     "deploy": [
       "NEQUI_ADDITIONAL_LOGGER_ENABLE",
-      "NEQUI_LOGGER_ENABLE"
+      "NEQUI_LOGGER_ENABLE",
+      "PARAMETERS_TABLE"
     ],
     "publish": [],
     "both": []

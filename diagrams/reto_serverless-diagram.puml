@@ -2,4 +2,44 @@
 header reto_serverless
 footer Página %page% of %lastpage%\nmade with ♥ by Nequi
 title Diagrama de Secuencia
+
+autonumber
+skinparam sequenceMessageAlign center
+
+actor Cliente
+participant Handler
+participant Service
+database "DynamoDB\nnequi-parameters-qa" as DynamoDB
+
+Cliente -> Handler : RequestMessage\n(parametersRQ: key, region)
+note right of Handler : genera traceID\ny loguea la entrada
+Handler -> Handler : validar schema
+
+alt #LightGreen  OK — parámetro encontrado
+    Handler -> Service : key, region
+    Service -> DynamoDB : getItem(key, region)
+    DynamoDB --> Service : Item
+    Service --> Handler : Item
+    Handler --> Cliente : SUCCESS (0) + parametersRS
+
+else #LightGoldenRodYellow  Petición inválida (falta key/region)
+    Handler --> Cliente : BAD_PARAMETERS (20-05A)
+
+else #LightBlue  Parámetro no encontrado
+    Handler -> Service : key, region
+    Service -> DynamoDB : getItem(key, region)
+    DynamoDB --> Service : (sin Item)
+    Service --> Handler : DATA_NOT_FOUND
+    Handler --> Cliente : DATA_NOT_FOUND (20-08A)
+
+else #MistyRose  Error técnico
+    Handler -> Service : key, region
+    Service -> DynamoDB : getItem(key, region)
+    DynamoDB --> Service : Error
+    Service --> Handler : TECHNICAL_ERROR
+    Handler --> Cliente : TECHNICAL_ERROR (20-07A)
+end
+
+note over Handler : todo error se loguea con el traceID
+
 @enduml
