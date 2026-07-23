@@ -1,27 +1,29 @@
 'use strict';
-const { mockClient } = require('aws-sdk-client-mock');
-const { DynamoDBDocumentClient, GetCommand } = require('@aws-sdk/lib-dynamodb');
 const index = require('../../index.js');
-const lambdaTestUtils = require('@nequi/nequi-ci-utils').Lambda8TestUtils;
+const RESPONSE_MESSAGES = require('@nequi/nequi-api-utils').RESPONSE_MESSAGES;
 
-let ddbMock;
+const loadEvent = (name) =>
+  JSON.parse(JSON.stringify(require(`../events/${name}.json`)));
 
-describe('reto_serverless/index.js', () => {
+const statusCode = (res) =>
+  res &&
+  res.ResponseMessage &&
+  res.ResponseMessage.ResponseHeader &&
+  res.ResponseMessage.ResponseHeader.Status &&
+  res.ResponseMessage.ResponseHeader.Status.StatusCode;
 
-  beforeEach(() => { ddbMock = mockClient(DynamoDBDocumentClient); });
-  afterEach(() => ddbMock.restore());
+// Llamado REAL a la lambda: index.handler consulta DynamoDB en QA.
+// Requiere credenciales vigentes en .env.
+describe('reto_serverless/index.js (llamado real a DynamoDB)', () => {
 
-  it('index.js: Success test', async () => {
-    ddbMock.on(GetCommand).resolves({
-      Item: { key: 'onboardingTest', region: 'C001', value: 'true' }
-    });
-    try {
-      let response = await lambdaTestUtils.test(index.handler, 'test/success.json');
-      expect(response).toBeDefined();
-      // Validar la estructura y/o contenido de la respuesta exitosa
-    } catch (error) {
-      console.log('ERROR: ', error);
-      expect(error).not.toBeDefined();
-    }
+  it('petición válida: retorna SUCCESS con el parámetro', async () => {
+    const res = await index.handler(loadEvent('valid'), {});
+    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.SUCCESS.CODE);
+    expect(res.ResponseMessage.ResponseBody.any.parametersRS).toBeDefined();
+  });
+
+  it('parámetro inexistente: retorna DATA_NOT_FOUND', async () => {
+    const res = await index.handler(loadEvent('not-found'), {});
+    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.DATA_NOT_FOUND.CODE);
   });
 });

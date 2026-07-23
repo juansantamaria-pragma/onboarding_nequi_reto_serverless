@@ -49,11 +49,15 @@ AWS_SESSION_TOKEN=...
 
 ## Pruebas automáticas
 
-Corren con Jasmine. La consulta a DynamoDB está simulada, así que no tocan AWS:
+Corren con Jasmine y hacen un **llamado real** a la lambda (`index.handler`)
+contra la tabla en QA. Por eso necesitan el `.env` con credenciales vigentes:
 
 ```bash
 npm test
 ```
+
+Los casos de validación (petición incompleta) no tocan AWS; los casos `valid` y
+`not-found` sí consultan DynamoDB.
 
 ## Probar a mano (trigger node)
 

@@ -40,6 +40,14 @@
             ],
             "Effect": "Allow",
             "Resource": "arn:aws:kms:us-east-1:177333342796:key/50a957ab-ee22-4590-bcfd-241aa16ab49b"
-        }  
+        },
+        {
+            "Sid": "dynamodb",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem"
+            ],
+            "Resource": "arn:aws:dynamodb:us-east-1:177333342796:table/nequi-parameters-qa"
+        }
     ]
   }

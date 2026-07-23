@@ -6,11 +6,9 @@ const RESPONSE_MESSAGES = nequiApiUtils.RESPONSE_MESSAGES
 const env = nequiUtils.Environment
 const lambdaUtils = nequiUtils.Lambda8
 
-const DEFAULT_TABLE = 'nequi-parameters-qa'
-
 const service = async (event) => {
   try {
-    const tableName = env.getEnv('PARAMETERS_TABLE') || DEFAULT_TABLE
+    const tableName = env.getEnv('PARAMETERS_TABLE')
     const { key, region } = event
 
     const clientId = await resolveClient()
