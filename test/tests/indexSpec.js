@@ -16,13 +16,23 @@ const statusCode = (res) =>
 // Requiere credenciales vigentes en .env.
 describe('reto_serverless/index.js (llamado real a DynamoDB)', () => {
 
-  it('petición válida: retorna SUCCESS con el parámetro', async () => {
-    const res = await index.handler(loadEvent('valid'), {});
-    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.SUCCESS.CODE);
-    expect(res.ResponseMessage.ResponseBody.any.parametersRS).toBeDefined();
+  describe('petición válida', () => {
+    let res;
+
+    beforeAll(async () => {
+      res = await index.handler(loadEvent('valid'), {});
+    });
+
+    it('retorna StatusCode SUCCESS (0)', () => {
+      expect(statusCode(res)).toBe(RESPONSE_MESSAGES.SUCCESS.CODE);
+    });
+
+    it('retorna el parámetro en parametersRS', () => {
+      expect(res.ResponseMessage.ResponseBody.any.parametersRS).toBeDefined();
+    });
   });
 
-  it('parámetro inexistente: retorna DATA_NOT_FOUND', async () => {
+  it('parámetro inexistente: retorna DATA_NOT_FOUND (20-08A)', async () => {
     const res = await index.handler(loadEvent('not-found'), {});
     expect(statusCode(res)).toBe(RESPONSE_MESSAGES.DATA_NOT_FOUND.CODE);
   });
