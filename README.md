@@ -1,8 +1,9 @@
 # reto_serverless — Onboarding Nequi
 
-Lambda sencilla que consulta un parámetro de configuración en DynamoDB. La
-petición trae un `key` y una `region`, y la función devuelve el item que
-corresponde en la tabla `nequi-parameters-qa`.
+Lambda que consulta un parámetro de configuración en DynamoDB. La petición usa el
+envelope de mensajería de Nequi (`RequestMessage`) y en el body lleva un `key` y
+una `region`; la función devuelve el item que corresponde en la tabla
+`nequi-parameters-qa`.
 
 Lo que se consulta lo decide cada petición, no está fijo en el código.
 
@@ -10,8 +11,25 @@ Lo que se consulta lo decide cada petición, no está fijo en el código.
 
 ```json
 {
-  "key": "onboardingTest",
-  "region": "C001"
+  "RequestMessage": {
+    "RequestHeader": {
+      "Channel": "MF-001",
+      "RequestDate": "2017-03-07T19:01:31.438Z",
+      "MessageID": "913291938",
+      "ClientID": "3195414070",
+      "Destination": {
+        "ServiceName": "ExampleService",
+        "ServiceOperation": "test",
+        "ServiceRegion": "C001",
+        "ServiceVersion": "1.0.0"
+      }
+    },
+    "RequestBody": {
+      "any": {
+        "parametersRQ": { "key": "onboardingTest", "region": "C001" }
+      }
+    }
+  }
 }
 ```
 
@@ -29,6 +47,9 @@ index.js  →  handler  →  business  →  service (DynamoDB)
 
 Si falta `key` o `region`, la validación corta antes de llegar a DynamoDB y
 responde `BAD_PARAMETERS`.
+
+Cada petición genera un `traceID` propio que aparece en los logs de entrada y de
+error, para poder seguir una misma ejecución de punta a punta.
 
 ## Configuración
 
