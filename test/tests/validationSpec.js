@@ -14,16 +14,18 @@ const statusCode = (res) =>
 
 describe('reto_serverless: body incompleto (validación de schema)', () => {
 
-  const incompleteCases = [
-    'missing-region',
-    'missing-key',
-    'empty'
-  ];
+  it('falta region: retorna BAD_PARAMETERS (20-05A)', async () => {
+    const res = await handler(loadEvent('missing-region'), {});
+    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.BAD_PARAMETERS.CODE);
+  });
 
-  incompleteCases.forEach((name) => {
-    it(`${name}: retorna BAD_PARAMETERS (20-05A)`, async () => {
-      const res = await handler(loadEvent(name), {});
-      expect(statusCode(res)).toBe(RESPONSE_MESSAGES.BAD_PARAMETERS.CODE);
-    });
+  it('falta key: retorna BAD_PARAMETERS (20-05A)', async () => {
+    const res = await handler(loadEvent('missing-key'), {});
+    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.BAD_PARAMETERS.CODE);
+  });
+
+  it('petición vacía: retorna BAD_PARAMETERS (20-05A)', async () => {
+    const res = await handler(loadEvent('empty'), {});
+    expect(statusCode(res)).toBe(RESPONSE_MESSAGES.BAD_PARAMETERS.CODE);
   });
 });
