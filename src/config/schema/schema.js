@@ -61,10 +61,12 @@ module.exports = {
                   "type": "object",
                   "properties": {
                     "key": {
-                      "type": "string"
+                      "type": "string",
+                      "minLength": 1
                     },
                     "region": {
-                      "type": "string"
+                      "type": "string",
+                      "minLength": 1
                     }
                   },
                   "required": [

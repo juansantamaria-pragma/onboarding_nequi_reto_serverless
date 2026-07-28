@@ -14,7 +14,7 @@ module.exports = async (event) => {
     throw lambdaUtils.buildOutput(true, false,
       getOutput(event, RESPONSE_MESSAGES.BAD_PARAMETERS.CODE,
         RESPONSE_MESSAGES.BAD_PARAMETERS.DESCRIPTION),
-      'reto_serverless', 'validator')
+      'reto_serverless', 'validateSchema')
   }
 }
 
