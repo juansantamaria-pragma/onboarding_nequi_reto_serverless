@@ -2,25 +2,35 @@
   "variables": {
     "get": [],
     "set": {
-      "DEV": {},
-      "QA": {
+      "DEV": {"PARAMETERS_TABLE": "nequi-parameters-qa",
+        "AWS_REGION": "us-east-1",
         "NEQUI_ADDITIONAL_LOGGER_ENABLE": "true",
-        "NEQUI_LOGGER_ENABLE": "true",
-        "PARAMETERS_TABLE": "nequi-parameters-qa"
+        "NEQUI_LOGGER_ENABLE": "true"
       },
-      "PDN": {}
+      "QA": {
+        "PARAMETERS_TABLE": "nequi-parameters-qa",
+        "AWS_REGION": "us-east-2",
+        "NEQUI_ADDITIONAL_LOGGER_ENABLE": "true",
+        "NEQUI_LOGGER_ENABLE": "true"
+      },
+      "PDN": {
+        "PARAMETERS_TABLE": "nequi-parameters-qa",
+        "AWS_REGION": "us-east-1",
+        "NEQUI_ADDITIONAL_LOGGER_ENABLE": "false",
+        "NEQUI_LOGGER_ENABLE": "false"
+      }
     },
     "deployDev": [],
-    "deploy": [
+    "deploy": [],
+    "publish": [],
+    "both": [
       "NEQUI_ADDITIONAL_LOGGER_ENABLE",
       "NEQUI_LOGGER_ENABLE",
       "PARAMETERS_TABLE"
-    ],
-    "publish": [],
-    "both": []
+    ]
   },
   "config": {
-    "timeout": 15,
+    "timeout": 20,
     "memorySize": 128,
     "desc": "OnboardingNequi"
   }
