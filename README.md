@@ -48,37 +48,52 @@ index.js  →  handler  →  business  →  service (DynamoDB)
 Si falta `key` o `region`, la validación corta antes de llegar a DynamoDB y
 responde `BAD_PARAMETERS`.
 
-Cada petición genera un `traceID` propio que aparece en los logs de entrada y de
-error, para poder seguir una misma ejecución de punta a punta.
+Como `traceID` se usa el `MessageID` de la petición (`RequestHeader.MessageID`),
+que aparece en los logs de entrada y de error para seguir una misma ejecución de
+punta a punta.
 
 ## Configuración
 
-Las credenciales de AWS van en un archivo `.env` (no se sube al repo). Copiá la
-plantilla y completá los valores:
+No se usa `.env`. La configuración local sale de dos fuentes, sin credenciales en el
+repo:
 
-```bash
-cp .env.example .env
-```
+- **Credenciales AWS** → por SSO. El SDK las toma del cache en `~/.aws`:
 
-```
-PARAMETERS_TABLE=nequi-parameters-qa
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=...
-AWS_SECRET_ACCESS_KEY=...
-AWS_SESSION_TOKEN=...
-```
+  ```powershell
+  $env:AWS_PROFILE = "<tu-profile>"
+  aws sso login --profile <tu-profile>
+  ```
+
+- **Config de entorno** (`PARAMETERS_TABLE`, `AWS_REGION`, logger flags) → desde
+  `settings.json`, inyectada en la sesión con el script `envGet`:
+
+  ```powershell
+  env = ['qa' , 'dev' , 'pdn']
+  envGet -env ":env[n]"
+  ```
+
+  `envGet` corre `nequi-ci getenvivar` sobre `settings.json` y setea las variables como
+  `$env:` en la sesión actual. Ejecutalo **desde la raíz del proyecto**.
 
 ## Pruebas automáticas
 
-Corren con Jasmine y hacen un **llamado real** a la lambda (`index.handler`)
-contra la tabla en QA. Por eso necesitan el `.env` con credenciales vigentes:
+Corren con Jasmine y hacen un **llamado real** a la lambda (`index.handler`) contra la
+tabla en QA. Necesitan la sesión preparada (SSO + `envGet -env "qa"`) en la misma
+terminal:
 
-```bash
+```powershell
 npm test
 ```
 
 Los casos de validación (petición incompleta) no tocan AWS; los casos `valid` y
 `not-found` sí consultan DynamoDB.
+
+> **`ExpiredTokenException` al correr `npm test`** → no es un fallo del código, es la
+> sesión SSO vencida. Refrescala y volvé a correr:
+>
+> ```powershell
+> aws sso login --profile <tu-profile>
+> ```
 
 ## Probar a mano (trigger node)
 
